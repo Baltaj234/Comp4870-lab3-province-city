@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using lab3_province_city.Models;
 using lab3_province_city.Data;
 
-namespace lab3-province-city.Pages.CityPages;
+namespace lab3_province_city.Pages.CityPages;
+
 
 public class CreateModel : PageModel
 {
