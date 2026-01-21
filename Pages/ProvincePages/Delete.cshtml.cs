@@ -1,0 +1,58 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using lab3_province_city.Models;
+using lab3_province_city.Data;
+
+namespace lab3-province-city.Pages.ProvincePages;
+
+public class DeleteModel : PageModel
+{
+    private readonly ApplicationDbContext _context;
+
+    public DeleteModel(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    [BindProperty]
+    public Province Province { get; set; } = default!;
+
+    public async Task<IActionResult> OnGetAsync(string? provincecode)
+    {
+        if (provincecode is null)
+        {
+            return NotFound();
+        }
+
+        var province = await _context.Provinces.FirstOrDefaultAsync(m => m.ProvinceCode == provincecode);
+        if (province is null)
+        {
+            return NotFound();
+        }
+        else
+        {
+            Province = province;
+        }
+
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostAsync(string? provincecode)
+    {
+        if (provincecode is null)
+        {
+            return NotFound();
+        }
+
+        var province = await _context.Provinces.FindAsync(provincecode);
+        if (province != null)
+        {
+            Province = province;
+            _context.Provinces.Remove(Province);
+            await _context.SaveChangesAsync();
+        }
+
+        return RedirectToPage("./Index");
+    }
+}
