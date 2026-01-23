@@ -10,7 +10,7 @@
 
 <h4>City</h4>
 <hr />
-<div asp-validation-summary="All" class="text-danger"></div>
+
 
 <div class="row">
     <div class="col-md-4">
@@ -27,6 +27,7 @@
                 <input asp-for="City.Population" class="form-control" />
                 <span asp-validation-for="City.Population" class="text-danger"></span>
             </div>
+            
             <div class="form-group">
         <span class="text-danger">*</span>
      <label asp-for="City.ProvinceCode" class="control-label"></label>

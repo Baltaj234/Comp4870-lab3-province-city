@@ -1,71 +1,69 @@
+using lab3_province_city.Data;
+using lab3_province_city.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using lab3_province_city.Models;
-using lab3_province_city.Data;
 
-namespace lab3_province_city.Pages.CityPages;
-
-public class EditModel : PageModel
+namespace lab3_province_city.Pages.CityPages
 {
-    private readonly ApplicationDbContext _context;
-
-    public EditModel(ApplicationDbContext context)
+    public class EditModel : PageModel
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    [BindProperty]
-    public City City { get; set; } = default!;
-
-    public async Task<IActionResult> OnGetAsync(int? cityid)
-    {
-        if (cityid is null)
+        public EditModel(ApplicationDbContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        var city = await _context.Cities.FirstOrDefaultAsync(m => m.CityId == cityid);
-        if (city is null)
-        {
-            return NotFound();
-        }
-        City = city;
-        return Page();
-    }
+        [BindProperty]
+        public City City { get; set; } = default!;
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
-    public async Task<IActionResult> OnPostAsync()
-    {
-        if (!ModelState.IsValid)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            return Page();
-        }
-
-        _context.Attach(City).State = EntityState.Modified;
-
-        try
-        {
-            await _context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!CityExists(City.CityId))
+            if (id == null)
             {
                 return NotFound();
             }
-            else
+
+            City = await _context.Cities
+                .FirstOrDefaultAsync(m => m.CityId == id);
+
+            if (City == null)
             {
-                throw;
+                return NotFound();
             }
+
+            
+            ViewData["ProvinceCode"] = new SelectList(
+                _context.Provinces,
+                "ProvinceCode",
+                "ProvinceName",
+                City.ProvinceCode
+            );
+
+            return Page();
         }
 
-        return RedirectToPage("./Index");
-    }
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+               
+                ViewData["ProvinceCode"] = new SelectList(
+                    _context.Provinces,
+                    "ProvinceCode",
+                    "ProvinceName",
+                    City.ProvinceCode
+                );
 
-    private bool CityExists(int cityid)
-    {
-        return _context.Cities.Any(e => e.CityId == cityid);
+                return Page();
+            }
+
+            _context.Attach(City).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return RedirectToPage("./Index");
+        }
     }
 }
