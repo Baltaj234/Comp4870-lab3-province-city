@@ -16,14 +16,14 @@ public class DetailsModel : PageModel
 
     public City City { get; set; } = default!;
 
-    public async Task<IActionResult> OnGetAsync(int? cityid)
+    public async Task<IActionResult> OnGetAsync(int? id)
     {
-        if (cityid is null)
+        if (id is null)
         {
             return NotFound();
         }
 
-        var city = await _context.Cities.FirstOrDefaultAsync(m => m.CityId == cityid);
+        var city = await _context.Cities.FirstOrDefaultAsync(m => m.CityId == id);
         if (city is null)
         {
             return NotFound();
