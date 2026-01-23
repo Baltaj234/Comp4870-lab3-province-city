@@ -19,6 +19,9 @@ public class IndexModel : PageModel
 
     public async Task OnGetAsync()
     {
-        Province = await _context.Provinces.ToListAsync();
+       Province = await _context.Provinces
+    .Include(p => p.Cities)
+    .ToListAsync();
+
     }
 }
