@@ -10,6 +10,8 @@
 
 <h4>City</h4>
 <hr />
+<div asp-validation-summary="All" class="text-danger"></div>
+
 <div class="row">
     <div class="col-md-4">
         <form method="post">
@@ -26,16 +28,17 @@
                 <span asp-validation-for="City.Population" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <span class="text-danger">*</span>
-                <label asp-for="City.ProvinceCode" class="control-label"></label>
-                <input asp-for="City.ProvinceCode" class="form-control" aria-required="true"/>
-                <span asp-validation-for="City.ProvinceCode" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="City.Province" class="control-label"></label>
-                <input asp-for="City.Province" class="form-control" />
-                <span asp-validation-for="City.Province" class="text-danger"></span>
-            </div>
+        <span class="text-danger">*</span>
+     <label asp-for="City.ProvinceCode" class="control-label"></label>
+
+     <select asp-for="City.ProvinceCode"
+            class="form-control"
+             asp-items="ViewBag.ProvinceCode">
+        <option value="">-- Select Province --</option>
+         </select>
+
+     <span asp-validation-for="City.ProvinceCode" class="text-danger"></span>
+        </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

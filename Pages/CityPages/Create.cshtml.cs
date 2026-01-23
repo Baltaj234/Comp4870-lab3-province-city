@@ -1,40 +1,52 @@
+using lab3_province_city.Data;
+using lab3_province_city.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using lab3_province_city.Models;
-using lab3_province_city.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace lab3_province_city.Pages.CityPages;
-
-
-public class CreateModel : PageModel
+namespace lab3_province_city.Pages.CityPages
 {
-    private readonly ApplicationDbContext _context;
-
-    public CreateModel(ApplicationDbContext context)
+    public class CreateModel : PageModel
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    public IActionResult OnGet()
-    {
-        return Page();
-    }
-
-    [BindProperty]
-    public City City { get; set; } = default!;
-
-    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD.
-    public async Task<IActionResult> OnPostAsync()
-    {
-        if (!ModelState.IsValid)
+        public CreateModel(ApplicationDbContext context)
         {
+            _context = context;
+        }
+
+        [BindProperty]
+        public City City { get; set; } = default!;
+
+        public IActionResult OnGet()
+        {
+            ViewData["ProvinceCode"] = new SelectList(
+                _context.Provinces,
+                "ProvinceCode",
+                "ProvinceName"
+            );
+
             return Page();
         }
 
-        _context.Cities.Add(City);
-        await _context.SaveChangesAsync();
+       public async Task<IActionResult> OnPostAsync()
+{
+    if (!ModelState.IsValid)
+    {
+        ViewData["ProvinceCode"] = new SelectList(
+            _context.Provinces,
+            "ProvinceCode",
+            "ProvinceName"
+        );
 
-        return RedirectToPage("./Index");
+        return Page();
+    }
+
+    _context.Cities.Add(City);
+    await _context.SaveChangesAsync();
+
+    return RedirectToPage("./Index");
+}
+
     }
 }
