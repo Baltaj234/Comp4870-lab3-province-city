@@ -1,38 +1,39 @@
+using lab3_province_city.Data;
+using lab3_province_city.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using lab3_province_city.Models;
-using lab3_province_city.Data;
 
-namespace lab3_province_city.Pages.ProvincePages;
-
-public class DetailsModel : PageModel
+namespace lab3_province_city.Pages.ProvincePages
 {
-    private readonly ApplicationDbContext _context;
-    public DetailsModel(ApplicationDbContext context)
+    public class DetailsModel : PageModel
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    public Province Province { get; set; } = default!;
-
-    public async Task<IActionResult> OnGetAsync(string? provincecode)
-    {
-        if (provincecode is null)
+        public DetailsModel(ApplicationDbContext context)
         {
-            return NotFound();
+            _context = context;
         }
 
-        var province = await _context.Provinces.FirstOrDefaultAsync(m => m.ProvinceCode == provincecode);
-        if (province is null)
-        {
-            return NotFound();
-        }
-        else
-        {
-            Province = province;
-        }
+        public Province Province { get; set; } = default!;
 
-        return Page();
+        public async Task<IActionResult> OnGetAsync(string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Province = await _context.Provinces
+                .Include(p => p.Cities)
+                .FirstOrDefaultAsync(p => p.ProvinceCode == id);
+
+            if (Province == null)
+            {
+                return NotFound();
+            }
+
+            return Page();
+        }
     }
 }

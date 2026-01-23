@@ -2,29 +2,51 @@
 @model lab3_province_city.Pages.ProvincePages.DetailsModel
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Province Details";
 }
 
-<h1>Details</h1>
+<h1>Province Details</h1>
 
-<div>
-    <h4>Province</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Province.ProvinceName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Province.ProvinceName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Province.Cities)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Province.Cities)
-        </dd>
-    </dl>
-</div>
+<hr />
+
+<dl class="row">
+    <dt class="col-sm-2">
+        Province Code
+    </dt>
+    <dd class="col-sm-10">
+        @Model.Province.ProvinceCode
+    </dd>
+
+    <dt class="col-sm-2">
+        Province Name
+    </dt>
+    <dd class="col-sm-10">
+        @Model.Province.ProvinceName
+    </dd>
+
+    <dt class="col-sm-2">
+        Cities
+    </dt>
+    <dd class="col-sm-10">
+        @if (Model.Province.Cities != null && Model.Province.Cities.Any())
+        {
+            <ul>
+                @foreach (var city in Model.Province.Cities)
+                {
+                    <li>
+                        <strong>@city.CityName</strong>
+                        (Population: @city.Population)
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <span>No cities found for this province.</span>
+        }
+    </dd>
+</dl>
+
 <div>
     <a asp-page="./Edit" asp-route-id="@Model.Province.ProvinceCode">Edit</a> |
     <a asp-page="./Index">Back to List</a>
