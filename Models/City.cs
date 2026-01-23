@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 
 namespace lab3_province_city.Models
@@ -22,6 +23,7 @@ namespace lab3_province_city.Models
 
        
         [ForeignKey("ProvinceCode")]
+        [ValidateNever]
         public Province Province { get; set; }
     }
 
