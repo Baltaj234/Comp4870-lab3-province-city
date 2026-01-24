@@ -25,15 +25,21 @@ public class CreateModel : PageModel
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD.
     public async Task<IActionResult> OnPostAsync()
+{
+    if (!ModelState.IsValid)
     {
-        if (!ModelState.IsValid)
+        foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
         {
-            return Page();
+            Console.WriteLine("MODEL ERROR: " + error.ErrorMessage);
         }
 
-        _context.Provinces.Add(Province);
-        await _context.SaveChangesAsync();
-
-        return RedirectToPage("./Index");
+        return Page();
     }
+
+    _context.Provinces.Add(Province);
+    await _context.SaveChangesAsync();
+
+    return RedirectToPage("./Index");
+}
+
 }
