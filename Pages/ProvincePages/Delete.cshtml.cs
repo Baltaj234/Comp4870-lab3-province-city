@@ -18,14 +18,14 @@ public class DeleteModel : PageModel
     [BindProperty]
     public Province Province { get; set; } = default!;
 
-    public async Task<IActionResult> OnGetAsync(string? provincecode)
+    public async Task<IActionResult> OnGetAsync(string? id)
     {
-        if (provincecode is null)
+        if (id is null)
         {
             return NotFound();
         }
 
-        var province = await _context.Provinces.FirstOrDefaultAsync(m => m.ProvinceCode == provincecode);
+        var province = await _context.Provinces.FirstOrDefaultAsync(m => m.ProvinceCode == id);
         if (province is null)
         {
             return NotFound();
@@ -38,14 +38,14 @@ public class DeleteModel : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostAsync(string? provincecode)
+    public async Task<IActionResult> OnPostAsync(string? id)
     {
-        if (provincecode is null)
+        if (id is null)
         {
             return NotFound();
         }
 
-        var province = await _context.Provinces.FindAsync(provincecode);
+        var province = await _context.Provinces.FindAsync(id);
         if (province != null)
         {
             Province = province;
